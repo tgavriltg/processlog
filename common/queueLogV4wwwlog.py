@@ -20,7 +20,7 @@ class queueLogV4wwwlog(threading.Thread):
         self.logging.error('parse error count is %d' % int(self.parseErrorCount))
 
     def run(self):
-        """{'mapi-total-2000-999999': 0, 'mapi-page-card-1000-2000': 0, 'mapi-page-card-2000-999999': 0, 'mapi-total-400': 0, 'mapi-other-200': 0, 'total': 0, 'mapi-other-2000-999999': 0, 'mapi-other-responseTime': 0}"""
+        """{'api-total-2000-999999': 0, 'api-page-card-1000-2000': 0, 'api-page-card-2000-999999': 0, 'api-total-400': 0, 'api-other-200': 0, 'total': 0, 'api-other-2000-999999': 0, 'api-other-responseTime': 0}"""
         threadname = threading.currentThread().getName()
         self.logging.info('queueLog (%s) thread started!'%(threadname))
         while 1:
