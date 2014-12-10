@@ -14,7 +14,7 @@ processLog
   2.读取从管道收集到的日志(其他程序通过管道发送给本程)。
 
 使用方式：
-#python processlog.py -h
+python processlog.py -h
 Usage: processlog.py [options]
 
 Options:
