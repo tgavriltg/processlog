@@ -10,8 +10,10 @@ from common import readConf
 from common import parseLog_dict
 from common import mergeLogClientNetFatalError
 from common import mergeLogV4wwwlog
+from common import mergeLogMClog
 from common import queueLog
 from common import queueLogV4wwwlog
+from common import queueLogMClog
 from common import zabbixSender
 from common import getHostIp
 
@@ -38,17 +40,14 @@ def readLog(file):
         while 1:
             line = f.readline()
             if not line:
-                print(222222222)
                 time.sleep(1)
                 pass
             else:
                 if not line.endswith("\n"):
-                    print(33333)
                     tmpLine += line
                 else:
                     line = tmpLine + line
                     tmpLine = ""
-                    print(1111111)
                     logData = parseLogObj.getLogData(line)
                     mergeLogObj.mergeData(logData)
 
@@ -60,9 +59,9 @@ if __name__ == "__main__":
 
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)-3s : %(message)s %(filename)s | [%(module)s %(lineno)d]', datefmt='%Y-%m-%d %H:%M:%S' )
     if debugFlag == False:
-        logging.disable(logging.info)
+        logging.disable(logging.INFO)
 
-    zSend = zabbixSender.ZSend(conf['zabbix']['zabbixserver'],int(conf['zabbix']['zabbixport']))
+    zSend = zabbixSender.ZSend(logging,conf['zabbix']['zabbixserver'],int(conf['zabbix']['zabbixport']))
     ipAddress = getHostIp.getHostIp(logging)
     host = ipAddress.matchIpAddress()
 
@@ -74,6 +73,11 @@ if __name__ == "__main__":
         parseLogObj = parseLog_dict.parseLog(options.logTag,conf[options.logTag]['regex'],'',logging)
         mergeLogObj = mergeLogV4wwwlog.mergeLogV4wwwlog(options.logTag,conf[options.logTag]['mergekeylist'],logging)
         queueLogObj = queueLogV4wwwlog.queueLogV4wwwlog(conf[options.logTag]['intervalsecond'],parseLogObj,mergeLogObj,logging,zSend,host)
+    elif options.logTag == "mclog":
+        parseLogObj = parseLog_dict.parseLog(options.logTag,conf[options.logTag]['regex'],'',logging)
+        mergeLogObj = mergeLogMClog.mergeLogMClog(options.logTag,conf[options.logTag]['mergekeylist'],logging)
+        queueLogObj = queueLogMClog.queueLogMClog(conf[options.logTag]['intervalsecond'],parseLogObj,mergeLogObj,logging,zSend,host)
+
 
     queueLogObj.setDaemon(True)
     queueLogObj.start()
@@ -98,8 +102,9 @@ if __name__ == "__main__":
                 break
             else:
                 logData = parseLogObj.getLogData(line)
-                print(logData)
                 if logData and options.logTag == "client_net_fatal_error":
                     mergeLogObj.mergeData(logData)
                 elif logData and options.logTag == "v4wwwlog":
+                    mergeLogObj.mergeData(logData)
+                elif logData and options.logTag == "mclog":
                     mergeLogObj.mergeData(logData)
