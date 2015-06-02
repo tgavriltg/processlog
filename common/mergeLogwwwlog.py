@@ -4,7 +4,7 @@
 import json,copy
 from common import mergeLog
 
-class mergeLogV4wwwlog(mergeLog.mergeLog):
+class mergeLogwwwlog(mergeLog.mergeLog):
 
     def __init__(self,_logTag,_mergeKeyList,_logging):
         mergeLog.mergeLog.__init__(self,_logTag,_mergeKeyList,_logging)
