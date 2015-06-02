@@ -9,10 +9,10 @@ import time
 from common import readConf
 from common import parseLog_dict
 from common import mergeLogClientNetFatalError
-from common import mergeLogV4wwwlog
+from common import mergeLogwwwlog
 from common import mergeLogMClog
 from common import queueLog
-from common import queueLogV4wwwlog
+from common import queueLogwwwlog
 from common import queueLogMClog
 from common import zabbixSender
 from common import getHostIp
@@ -69,10 +69,10 @@ if __name__ == "__main__":
         parseLogObj = parseLog_dict.parseLog(options.logTag,'','',logging)
         mergeLogObj = mergeLogClientNetFatalError.mergeLogClientNetFatalError(options.logTag,conf[options.logTag]['mergekeylist'],logging)
         queueLogObj = queueLog.queueLog(conf[options.logTag]['intervalsecond'],parseLogObj,mergeLogObj,logging,zSend,host)
-    elif options.logTag == "v4wwwlog":
+    elif options.logTag == "wwwlog":
         parseLogObj = parseLog_dict.parseLog(options.logTag,conf[options.logTag]['regex'],'',logging)
-        mergeLogObj = mergeLogV4wwwlog.mergeLogV4wwwlog(options.logTag,conf[options.logTag]['mergekeylist'],logging)
-        queueLogObj = queueLogV4wwwlog.queueLogV4wwwlog(conf[options.logTag]['intervalsecond'],parseLogObj,mergeLogObj,logging,zSend,host)
+        mergeLogObj = mergeLogwwwlog.mergeLogwwwlog(options.logTag,conf[options.logTag]['mergekeylist'],logging)
+        queueLogObj = queueLogwwwlog.queueLogwwwlog(conf[options.logTag]['intervalsecond'],parseLogObj,mergeLogObj,logging,zSend,host)
     elif options.logTag == "mclog":
         parseLogObj = parseLog_dict.parseLog(options.logTag,conf[options.logTag]['regex'],'',logging)
         mergeLogObj = mergeLogMClog.mergeLogMClog(options.logTag,conf[options.logTag]['mergekeylist'],logging)
@@ -88,8 +88,8 @@ if __name__ == "__main__":
 
     sum = 0
 
-    if options.logTag == "v4wwwlog":
-        readLog("/tmp/v4www.log")
+    if options.logTag == "wwwlog":
+        readLog("/tmp/www.log")
     else:
         while 1:
             if debugFlag == True and readFileFlag == True:
@@ -104,7 +104,7 @@ if __name__ == "__main__":
                 logData = parseLogObj.getLogData(line)
                 if logData and options.logTag == "client_net_fatal_error":
                     mergeLogObj.mergeData(logData)
-                elif logData and options.logTag == "v4wwwlog":
+                elif logData and options.logTag == "wwwlog":
                     mergeLogObj.mergeData(logData)
                 elif logData and options.logTag == "mclog":
                     mergeLogObj.mergeData(logData)
