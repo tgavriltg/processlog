@@ -3,7 +3,7 @@
 
 import threading,time
 
-class queueLogV4wwwlog(threading.Thread):
+class queueLogwwwlog(threading.Thread):
     parseErrorCount = 0
 
     def __init__(self,_intervalSecond,_parseLogObj,_mergeLogObj,_logging,_zSend,_host):
